@@ -41,7 +41,7 @@ const ConversationWrapper: React.FC<React.PropsWithChildren<Props>> = ({ childre
             socket.off('connect', onConnection);
             socket.disconnect();
         }
-    }, [])
+    }, [token])
 
     return (
         <ConversationContext.Provider value={conversationStore}>

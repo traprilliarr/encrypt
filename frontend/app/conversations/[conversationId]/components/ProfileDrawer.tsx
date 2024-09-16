@@ -1,17 +1,16 @@
 // @ts-nocheck
-'use client';
+"use client";
 
-import Avatar from '@/app/components/Avatar';
-import useOtherUser from '@/app/hooks/useOtherUser';
-import { Transition, Dialog } from '@headlessui/react';
-import { Conversation, User } from '@prisma/client';
-import { format } from 'date-fns';
-import { useMemo, Fragment, useState } from 'react';
-import { IoClose, IoTrash } from 'react-icons/io5';
-import ConfirmModal from './ConfirmModal';
-import AvatarGroup from '@/app/components/AvatarGroup';
-import useActiveList from '@/app/hooks/useActiveList';
-import { conversation } from '@/app/hooks/useConversation';
+import Avatar from "@/app/components/Avatar";
+import useOtherUser from "@/app/hooks/useOtherUser";
+import { Transition, Dialog } from "@headlessui/react";
+import { format } from "date-fns";
+import { useMemo, Fragment, useState } from "react";
+import { IoClose, IoTrash } from "react-icons/io5";
+import ConfirmModal from "./ConfirmModal";
+import AvatarGroup from "@/app/components/AvatarGroup";
+import useActiveList from "@/app/hooks/useActiveList";
+import { conversation } from "@/app/hooks/useConversation";
 
 interface ProfileDrawerProps {
   isOpen: boolean;
@@ -28,11 +27,11 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const { members } = useActiveList();
-  
+
   const isActive = members.indexOf(otherUser?.email) !== -1;
 
   const joinedDate = useMemo(() => {
-    return format(new Date(data.created_at), 'PP');
+    return format(new Date(data.created_at), "PP");
   }, [data.created_at]);
 
   const title = useMemo(() => {
@@ -48,7 +47,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
       return `${data.users.length} members`;
     }
 
-    return isActive ? 'Active' : 'Offline';
+    return isActive ? "Active" : "Offline";
   }, [data, isActive]);
 
   return (
@@ -140,7 +139,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                   <dd className="mt-1 font-medium text-sm text-gray-900 sm:col-span-2">
                                     {data.users
                                       .map((user) => user.name || user.email)
-                                      .join(', ')}
+                                      .join(", ")}
                                   </dd>
                                 </div>
                               ) : (

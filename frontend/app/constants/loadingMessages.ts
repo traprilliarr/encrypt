@@ -1,4 +1,5 @@
 // array of funny loading messages
+// eslint-disable-next-line import/no-anonymous-default-export
 export default [
   'Loading...'
   // 'A long time ago in a server far, far away...',

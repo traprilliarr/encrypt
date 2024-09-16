@@ -33,7 +33,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
       })
       .catch(() => toast.error('Something went wrong!'))
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [conversationId, onClose, router]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

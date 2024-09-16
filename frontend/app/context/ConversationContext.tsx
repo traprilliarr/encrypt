@@ -8,10 +8,9 @@ import { conversation, message } from '../hooks/useConversation';
 import type { } from '@redux-devtools/extension'
 import _ from 'lodash';
 
-
 interface conversationProps {
     conversations: conversation[];
-    users: any[];
+    users: User[];
 };
 
 interface conversationState extends conversationProps {

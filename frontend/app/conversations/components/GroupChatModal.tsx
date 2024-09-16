@@ -1,15 +1,14 @@
-'use client';
+"use client";
 
-import Modal from '@/app/components/Modal';
-import Input from '@/app/components/input/Input';
-import Select from '@/app/components/input/Select';
-import { User } from '@prisma/client';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import Button from '@/app/components/Button';
+import Modal from "@/app/components/Modal";
+import Input from "@/app/components/input/Input";
+import Select from "@/app/components/input/Select";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import Button from "@/app/components/Button";
 
 interface GroupChatModalProps {
   isOpen?: boolean;
@@ -33,25 +32,25 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({
     watch,
   } = useForm<FieldValues>({
     defaultValues: {
-      name: '',
+      name: "",
       members: [],
     },
   });
 
-  const members = watch('members');
+  const members = watch("members");
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
     axios
-      .post('/api/conversations', { ...data, isGroup: true })
+      .post("/api/conversations", { ...data, isGroup: true })
       .then(() => {
         router.refresh();
         onClose();
-        toast.success('Group chat created!');
+        toast.success("Group chat created!");
         router.push(`/conversations`);
       })
-      .catch((err) => toast.error(err.message || 'Something went wrong!'))
+      .catch((err) => toast.error(err.message || "Something went wrong!"))
       .finally(() => setIsLoading(false));
   };
 
@@ -85,7 +84,7 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({
                   value: user.id,
                 }))}
                 onChange={(value) =>
-                  setValue('members', value, { shouldValidate: true })
+                  setValue("members", value, { shouldValidate: true })
                 }
                 value={members}
               />
