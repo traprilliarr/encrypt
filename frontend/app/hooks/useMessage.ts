@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { Socket } from "socket.io-client";
@@ -12,6 +14,7 @@ import {
 import { hexistsToArrayBuffer } from "../libs/crypto/util";
 import { messageContentType } from "./useConversation";
 import useCurrentUser from "./useCurrentUser";
+import { signOut } from "next-auth/react";
 
 type sendNewMessage = {
   content: string;
@@ -81,6 +84,11 @@ export const useListenToNewMessage = () => {
   };
 
   useEffect(() => {
+    if (!loggedInUserKey || !loggedInUserKey.privateKey) {
+      signOut();
+      return;
+    }
+
     const newMessageHandler = (data: newMessageComesIn) => {
       let [privateKey, publicKey] = [
         loggedInUserKey.privateKey,
@@ -127,14 +135,7 @@ export const useListenToNewMessage = () => {
     return () => {
       socketParam.off(socketEvents.receiveNewMessage, newMessageHandler);
     };
-  }, [
-    socketParam,
-    socketParam.connected,
-    user,
-    loggedInUserKey.privateKey,
-    addNewMessage,
-    findReceiver,
-  ]);
+  }, [socketParam, socketParam.connected, user, addNewMessage, findReceiver, loggedInUserKey]);
 
   return {};
 };

@@ -1,24 +1,46 @@
 # panduan menjalankan program
 
-> pastikan .env sudah terisi
-> pastikan sudah melakukan npx prisma migrate
+> pastikan .env sudah sesuai
+> pastikan sudah melakukan npx prisma migrate pada backend
+
+## pada backend folder
 
 1. jalankan docker compose
 ```sh
 docker compose up
 ```
 
-2. jalankan server backend di folder [/server](/frontend)
+2. install dependecies
 ```sh
-npm run dev
+npm install
 ```
 
-3. jalankan frontend di folder [/frontend](/frontend)
+3. lakukan migrate prisma
 ```sh
-npm run dev
+npx prisma migrate dev
+npx prisma db push
 ```
 
-tahapan:
-1. declare module ecdh [x]
-2. perbaiki bug
-3. deploy
+4. jalankan backend
+```sh
+npm run start
+```
+
+## pada frontend folder
+
+1. install dependecies
+```sh
+npm install
+```
+
+2. build nextjs
+```sh
+npm run build
+```
+
+3. jalankan nextjs
+```sh
+npm run start
+```
+
+

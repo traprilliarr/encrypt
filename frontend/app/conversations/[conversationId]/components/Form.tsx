@@ -1,24 +1,25 @@
-'use client';
+"use client";
 
-import useConversation, { messageContentType } from '@/app/hooks/useConversation';
-import { sendNewMessage } from '@/app/hooks/useMessage';
-import axios from 'axios';
-import { CldUploadButton } from 'next-cloudinary';
-import React from 'react';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { HiPaperAirplane, HiPhoto } from 'react-icons/hi2';
-import MessageInput from './MessageInput';
-import socket from '@/app/context/SocketContext';
+import useConversation, {
+  messageContentType,
+} from "@/app/hooks/useConversation";
+import { sendNewMessage } from "@/app/hooks/useMessage";
+import React from "react";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
+import MessageInput from "./MessageInput";
+import socket from "@/app/context/SocketContext";
+import toast from "react-hot-toast";
 
 interface Props {
-  encryptMessageForSending: (message: string) => ({
-    messageEncryptedHexist: string,
-    ivHexist: string,
-  })
+  encryptMessageForSending: (message: string) => {
+    messageEncryptedHexist: string;
+    ivHexist: string;
+  };
 }
 
 const Form: React.FC<React.PropsWithChildren<Props>> = ({
-  encryptMessageForSending
+  encryptMessageForSending,
 }) => {
   const { conversationId } = useConversation();
 
@@ -29,39 +30,71 @@ const Form: React.FC<React.PropsWithChildren<Props>> = ({
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
-      message: '',
+      message: "",
     },
   });
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    setValue('message', '', { shouldValidate: false });
-    const messagePrepared = encryptMessageForSending(data.message)
+    setValue("message", "", { shouldValidate: false });
+    const messagePrepared = encryptMessageForSending(data.message);
     sendNewMessage(socket, {
       content: messagePrepared.messageEncryptedHexist,
       convId: conversationId,
       content_type: messageContentType.TEXT,
       metadata: {
         iv: messagePrepared.ivHexist,
-      }
-    })
+      },
+    });
   };
 
-  const handleUpload = (result: any) => {
-    axios.post(`/api/messages`, {
-      image: result?.info?.secure_url,
-      conversationId,
-    });
+  const handleUpload = async (result: any) => {
+    try {
+      const img: HTMLInputElement | null =
+        document.querySelector("#uploadfile");
+
+      if (!img || !img.files) return;
+      const file = img.files[0];
+      console.debug(file.size);
+      if (file.size > 1024 * 1024 * 2) {
+        return toast.error("max file is 2mb");
+      }
+      const fileuri: string | ArrayBuffer | null = await new Promise(
+        (resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = (error) => reject(error);
+
+          reader.readAsDataURL(file);
+        }
+      );
+      if (!fileuri || typeof fileuri != "string") return;
+
+      setValue("message", "", { shouldValidate: false });
+      const messagePrepared = encryptMessageForSending(fileuri);
+      sendNewMessage(socket, {
+        content: messagePrepared.messageEncryptedHexist,
+        convId: conversationId,
+        content_type: messageContentType.IMAGE,
+        metadata: {
+          iv: messagePrepared.ivHexist,
+        },
+      });
+    } catch (error: any) {
+      console.log(error.message);
+    }
   };
 
   return (
     <div className="py-4 px-4 bg-white border-t flex items-center gap-2 lg:gap-4 w-full">
-      <CldUploadButton
-        options={{ maxFiles: 1 }}
-        onUpload={handleUpload}
-        uploadPreset="jkyytcex"
-      >
-        <HiPhoto size={30} className="text-cyan-500" />
-      </CldUploadButton>
+      <label htmlFor="uploadfile">
+        <HiPhoto size={30} className="text-cyan-500 cursor-pointer" />
+      </label>
+      <input
+        id="uploadfile"
+        type="file"
+        className="hidden"
+        onChange={handleUpload}
+      />
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex items-center gap-2 lg:gap-4 w-full"

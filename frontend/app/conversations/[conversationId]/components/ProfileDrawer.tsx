@@ -114,7 +114,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                             {statusText}
                           </div>
 
-                          <div className="flex gap-10 my-8">
+                          {/* <div className="flex gap-10 my-8">
                             <div
                               onClick={() => setIsConfirmModalOpen(true)}
                               title="Delete Chat"
@@ -127,7 +127,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                 Delete
                               </div>
                             </div>
-                          </div>
+                          </div> */}
 
                           <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
                             <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">

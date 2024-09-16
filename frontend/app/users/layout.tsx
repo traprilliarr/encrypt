@@ -1,12 +1,7 @@
-import { Metadata } from 'next';
-import getUsers from '../actions/getUsers';
-import Sidebar from '../components/sidebar/Sidebar';
-import UserList from './components/UserList';
-import getCurrentUser from '../actions/getCurrentUser';
-
-export const metadata: Metadata = {
-  title: 'All Users | Nexus - Your Ultimate Chat Experience',
-};
+import getUsers from "../actions/getUsers";
+import Sidebar from "../components/sidebar/Sidebar";
+import UserList from "./components/UserList";
+import getCurrentUser from "../actions/getCurrentUser";
 
 export default async function UsersLayout({
   children,
