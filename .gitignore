@@ -1,0 +1,7 @@
+yarn.lock
+bun.lockb
+yarn-error.log
+.next
+node_modules
+package-lock.json
+myworkspace.code-workspace
