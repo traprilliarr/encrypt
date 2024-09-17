@@ -63,7 +63,7 @@ const socketOnConnect = async (socket: io.Socket) => {
     }
     const user = await getUserByIdService(parseInt(authData.user_id))
 
-    console.log(`USER ${user.username} connected`);
+    console.log(`USER ${user?.username} connected`);
     const socketUserId = BigInt(authData.user_id);
 
     const queueName = buildQueueName(authData.user_id);
@@ -79,7 +79,7 @@ const socketOnConnect = async (socket: io.Socket) => {
                 seen_by_me: msg.seen_by.some(x => x.user_id.toString() === socketUserId.toString()),
                 sent_by_me: msg.sender_id.toString() === socketUserId.toString(),
             });
-            console.log(`emit message from user ${msg.sender.fullname} to user ${user.fullname}. emitted : ${emitted}`);
+            console.log(`emit message from user ${msg.sender.fullname} to user ${user?.fullname}. emitted : ${emitted}`);
             amqpChannel.ack(message);
         }
     })
@@ -123,7 +123,7 @@ const socketOnConnect = async (socket: io.Socket) => {
     });
 
     socket.on("disconnect", () => {
-        console.log(`USER ${user.username} ${authData.user_id} disconnected`);
+        console.log(`USER ${user?.username} ${authData.user_id} disconnected`);
         amqpChannel.cancel(consumeMessageSentToMe.consumerTag)
     })
 }

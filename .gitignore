@@ -7,3 +7,5 @@ package-lock.json
 myworkspace.code-workspace
 
 pnpm-lock.yaml
+
+migrations

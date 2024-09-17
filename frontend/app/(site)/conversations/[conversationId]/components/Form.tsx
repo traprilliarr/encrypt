@@ -58,8 +58,9 @@ const Form: React.FC<React.PropsWithChildren<Props>> = ({
       if (!img || !img.files) return;
       const file = img.files[0];
 
-      if (file.size > 1024 * 1024 * 2) {
-        return toast.error("max file is 2mb");
+      if (file.size > 1024 * 300) {
+        setLoading(false);
+        return toast.error("max img is 300kb");
       }
       const fileuri: string | ArrayBuffer | null = await new Promise(
         (resolve, reject) => {
@@ -93,11 +94,14 @@ const Form: React.FC<React.PropsWithChildren<Props>> = ({
     <div className="py-4 px-4 bg-white border-t flex items-center gap-2 lg:gap-4 w-full">
       <label
         htmlFor="uploadfile"
-        className={clsx("cursor", loading && "cursor-not-allowed")}
+        className={clsx("cursor-pointer", loading && "cursor-not-allowed")}
       >
         <HiPhoto
           size={30}
-          className={clsx("text-cyan-500 ", loading && "text-gray-700")}
+          className={clsx(
+            "text-cyan-500 ",
+            loading && "cursor-not-allowed text-gray-700"
+          )}
         />
       </label>
       <input
