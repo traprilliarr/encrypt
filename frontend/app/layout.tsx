@@ -5,7 +5,6 @@ import ToasterContext from "./context/ToasterContext";
 import "./globals.css";
 import RootWrapper from "./wrapper";
 
-
 export const metadata: Metadata = {
   title: "Chat app",
 };

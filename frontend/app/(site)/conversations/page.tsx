@@ -1,8 +1,8 @@
 'use client';
 
 import clsx from 'clsx';
-import EmptyState from '../components/EmptyState';
-import useConversationHelper from '../hooks/useConversation';
+import EmptyState from '../../components/EmptyState';
+import useConversationHelper from '../../hooks/useConversation';
 import ConversationList from './components/ConversationList';
 
 const Home = () => {
