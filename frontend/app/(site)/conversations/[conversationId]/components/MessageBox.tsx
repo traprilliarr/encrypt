@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import { useState } from 'react';
-import ImageModal from './ImageModal';
+// import ImageModal from './ImageModal';
 import { message } from '@/app/hooks/useConversation';
 import useCurrentUser from '@/app/hooks/useCurrentUser';
 
@@ -53,14 +53,9 @@ const MessageBox: React.FC<MessageBoxProps> = ({ isLast, data }) => {
         </div>
 
         <div className={message}>
-          <ImageModal
-            isOpen={isImageModalOpen}
-            src={isImage ? data.content : null}
-            onClose={() => setIsImageModalOpen(false)}
-          />
-          {isImage ? (
+          
+          {isImage ? (            
             <Image
-              onClick={() => setIsImageModalOpen(true)}
               src={data.content}
               width={288}
               height={288}

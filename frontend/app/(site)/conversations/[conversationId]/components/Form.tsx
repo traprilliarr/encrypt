@@ -4,12 +4,13 @@ import useConversation, {
   messageContentType,
 } from "@/app/hooks/useConversation";
 import { sendNewMessage } from "@/app/hooks/useMessage";
-import React from "react";
+import React, { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
 import MessageInput from "./MessageInput";
 import socket from "@/app/context/SocketContext";
 import toast from "react-hot-toast";
+import clsx from "clsx";
 
 interface Props {
   encryptMessageForSending: (message: string) => {
@@ -47,14 +48,16 @@ const Form: React.FC<React.PropsWithChildren<Props>> = ({
     });
   };
 
-  const handleUpload = async (result: any) => {
+  const [loading, setLoading] = useState(false);
+  const handleUpload = async () => {
+    setLoading(true);
     try {
       const img: HTMLInputElement | null =
         document.querySelector("#uploadfile");
 
       if (!img || !img.files) return;
       const file = img.files[0];
-      console.debug(file.size);
+
       if (file.size > 1024 * 1024 * 2) {
         return toast.error("max file is 2mb");
       }
@@ -79,21 +82,31 @@ const Form: React.FC<React.PropsWithChildren<Props>> = ({
           iv: messagePrepared.ivHexist,
         },
       });
+      setLoading(false);
     } catch (error: any) {
       console.log(error.message);
+      setLoading(false);
     }
   };
 
   return (
     <div className="py-4 px-4 bg-white border-t flex items-center gap-2 lg:gap-4 w-full">
-      <label htmlFor="uploadfile">
-        <HiPhoto size={30} className="text-cyan-500 cursor-pointer" />
+      <label
+        htmlFor="uploadfile"
+        className={clsx("cursor", loading && "cursor-not-allowed")}
+      >
+        <HiPhoto
+          size={30}
+          className={clsx("text-cyan-500 ", loading && "text-gray-700")}
+        />
       </label>
       <input
         id="uploadfile"
         type="file"
+        accept=".jpg,.jpeg,.png,.webp,.svg,.gif"
         className="hidden"
         onChange={handleUpload}
+        disabled={loading}
       />
       <form
         onSubmit={handleSubmit(onSubmit)}

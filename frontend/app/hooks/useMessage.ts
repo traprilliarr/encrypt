@@ -62,8 +62,8 @@ function scrolltobottom() {
 export const sendNewMessage = (socket: Socket, data: sendNewMessage) => {
   if (socket.connected) {
     console.log("sended message");
-    scrolltobottom();
     socket.emit(socketEvents.sendNewMessage, data);
+    scrolltobottom();
   } else {
     toast.error("Anda sedang offline. Silahkan refresh");
   }
