@@ -5,6 +5,7 @@ import db from '../../db/index.js';
 const passwordSaltRounds = 10;
 
 const signUpService = async (data: Prisma.UserCreateInput) => {
+    console.log(data)
     const sameUsername = await db.user.findFirst({
         where: {
             username: data.username,

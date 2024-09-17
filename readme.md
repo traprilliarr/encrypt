@@ -17,8 +17,7 @@ npm install
 
 3. lakukan migrate prisma
 ```sh
-npx prisma migrate dev
-npx prisma db push
+npx prisma migrate dev && npx prisma db push
 ```
 
 4. jalankan backend
