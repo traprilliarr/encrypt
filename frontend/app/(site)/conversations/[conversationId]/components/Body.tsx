@@ -3,7 +3,7 @@
 import useConversation, { message } from "@/app/hooks/useConversation";
 import useCurrentUser from "@/app/hooks/useCurrentUser";
 import seenMessageService from "@/app/services/seenMessage";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import MessageBox from "./MessageBox";
 
 interface BodyProps {
@@ -11,14 +11,10 @@ interface BodyProps {
 }
 
 const Body: React.FC<BodyProps> = ({ messages = [] }) => {
-  const bottomRef = useRef<HTMLDivElement>(null);
-
   const { conversationId } = useConversation();
   const currentUser = useCurrentUser();
 
   useEffect(() => {
-    bottomRef?.current?.scrollIntoView(false);
-
     // mark message as seen
     const messageHandler = (message: message) => {
       seenMessageService(
@@ -26,7 +22,6 @@ const Body: React.FC<BodyProps> = ({ messages = [] }) => {
         conversationId,
         message.id
       );
-      bottomRef?.current?.scrollIntoView();
     };
 
     return () => {};
@@ -38,7 +33,7 @@ const Body: React.FC<BodyProps> = ({ messages = [] }) => {
         <MessageBox isLast={i === messages.length - 1} key={i} data={message} />
       ))}
 
-      <div ref={bottomRef} className="pt-8" />
+      <div id="bottom" className="pt-8" />
     </div>
   );
 };

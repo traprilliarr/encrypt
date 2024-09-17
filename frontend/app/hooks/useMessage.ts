@@ -55,9 +55,14 @@ type newMessageComesIn = {
   updated_at: Date;
 };
 
+function scrolltobottom() {
+  document.getElementById("bottom")?.scrollIntoView();
+}
+
 export const sendNewMessage = (socket: Socket, data: sendNewMessage) => {
   if (socket.connected) {
     console.log("sended message");
+    scrolltobottom();
     socket.emit(socketEvents.sendNewMessage, data);
   } else {
     toast.error("Anda sedang offline. Silahkan refresh");
@@ -125,17 +130,24 @@ export const useListenToNewMessage = () => {
         sender: data.sender,
         sender_id: data.sender_id,
       });
+      scrolltobottom();
     };
 
     if (socketParam.connected) {
-      console.log("listening to new message");
       socketParam.on(socketEvents.receiveNewMessage, newMessageHandler);
     }
 
     return () => {
       socketParam.off(socketEvents.receiveNewMessage, newMessageHandler);
     };
-  }, [socketParam, socketParam.connected, user, addNewMessage, findReceiver, loggedInUserKey]);
+  }, [
+    socketParam,
+    socketParam.connected,
+    user,
+    addNewMessage,
+    findReceiver,
+    loggedInUserKey,
+  ]);
 
   return {};
 };

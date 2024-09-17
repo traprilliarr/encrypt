@@ -33,6 +33,7 @@ const ConversationId = ({ params }: { params: IParams }) => {
         <Header conversation={conversation} />
         <Body messages={conversation.messages} />
         <Form encryptMessageForSending={encryptMessageForSending} />
+        <div className="h-12 lg:h-0 border"></div>
       </div>
     </div>
   );
