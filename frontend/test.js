@@ -454,6 +454,34 @@ const stringToBytesWithPaddingAndUT8Encode = (data) => pkcs7pad(utf8Converter.to
 const bytesToStringWithPaddingAndUT8Decode = (data) => utf8Converter.fromBytes(pkcs7strip(data));
 
 
+const generateEncrypt = async (secretkey, message) => {
+    const start = Date.now()
+    // const secretKeyString = "nabielrahasiabanget";
+    const aesKeyLengthInBytes = 32;
+    const keyInBits = await deriveBitsFromPassword(secretkey, aesKeyLengthInBytes);
+    const iv = generateIv();
+    
+    // const plainTextToEncrypt = "1s";
+    
+    const plainTextBytes = stringToBytesWithPaddingAndUT8Encode(message);
+
+    
+    const aesCbc = new AES.CBC(new Uint8Array(keyInBits.derivedBits), iv);
+    
+    const encrypted = aesCbc.encrypt(plainTextBytes);
+    const encryptedString = AES.utils.utf8.fromBytes(encrypted);
+    
+    // console.log('aescbc:', aesCbc)
+    console.log(`decryption: ${message}, took ${Date.now() - start}ms, encrypted: ${encryptedString}`)
+}
+
+const data = ['kalimat 1','kalimat 2','kalimat 3']
+
+console.log("")
+data.forEach(e=>{
+    generateEncrypt("nursyah", e)
+})
+
 ///////////////////////
 // Exporting
 // The block cipher
@@ -477,20 +505,51 @@ const AES = {
     }
 };
 (async () => {
+
     const secretKeyString = "nabielrahasiabanget";
     const aesKeyLengthInBytes = 32;
     const keyInBits = await deriveBitsFromPassword(secretKeyString, aesKeyLengthInBytes);
+
     // iv should in 16 bytes
+    // IV (Initialization Vector) dalam Kriptografi
+    // 
+    // Apa itu IV?
+    // 
+    // Dalam kriptografi, khususnya dalam algoritma enkripsi blok, IV adalah sebuah nilai awal yang digunakan untuk menginisialisasi proses enkripsi. IV ini berperan penting dalam memastikan bahwa dua blok plaintext yang sama tidak dienkripsi menjadi ciphertext yang sama, bahkan jika menggunakan kunci yang sama
+    
     const iv = generateIv();
-    const plainTextToEncrypt = "hi, i am very secret s baiousbdoaiubsdoub^";
+    // console.log('iv:',iv)
+    // mulai dari sini
+    const plainTextToEncrypt = "1s";
+
     const plainTextBytes = stringToBytesWithPaddingAndUT8Encode(plainTextToEncrypt);
+    // console.log('textBytes:', plainTextBytes)
+
+    // AES-CBC: Cipher Block Chaining Mode
+
+    let start = Date.now()
+    // AES-CBC (Advanced Encryption Standard - Cipher Block Chaining) adalah salah satu mode operasi yang digunakan bersama dengan algoritma enkripsi blok AES. Mode operasi ini digunakan untuk mengenkripsi data yang lebih panjang daripada ukuran blok AES, yaitu 128 bit.
     const aesCbc = new AES.CBC(new Uint8Array(keyInBits.derivedBits), iv);
+    // disini terjadi enkripsi
+    
+    // console.log('aescbc:', aesCbc)
+    // console.log(`encryption time: ${Date.now() - start}ms`)
+
+
+    
+
+
     const encrypted = aesCbc.encrypt(plainTextBytes);
     const encryptedString = AES.utils.utf8.fromBytes(encrypted);
-    console.log("encryptedString: ", encryptedString);
+    // console.log("encryptedString: ", encryptedString);
+
+    start = Date.now()
 
     const decryption = new AES.CBC(new Uint8Array(keyInBits.derivedBits), iv);
     const decrypted = decryption.decrypt(encrypted);
     const decryptedString = bytesToStringWithPaddingAndUT8Decode(decrypted);
-    console.log("decryptedString: ", decryptedString);
+    // console.log("decryptedString: ", decryptedString);
+
+    // console.log(`decryption time: ${Date.now() - start}ms`)
 })();
+
