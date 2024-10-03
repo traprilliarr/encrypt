@@ -40,7 +40,7 @@ const deriveKeyFromPassword = async (password, keyLength) => {
 };
 // deriveKeyFromPassword derive a cryptographically bits derivation from password with specified key length in bytes
 // with PBKDF2 key derivation function
-const deriveBitsFromPassword = async (password, keyLength) => {
+export const deriveBitsFromPassword = async (password, keyLength) => {
     const keyMaterial = await getPBKDF2KeyMaterial(password);
     const salt_size = 32;
     const salt = genSalt(salt_size);
@@ -445,47 +445,21 @@ function pkcs7strip(data) {
     return result;
 }
 
-const generateIv = () => {
+export const generateIv = () => {
     return crypto.getRandomValues(new Uint8Array(16));
 }
 
-const stringToBytesWithPaddingAndUT8Encode = (data) => pkcs7pad(utf8Converter.toBytes(data));
+export const stringToBytesWithPaddingAndUT8Encode = (data) => pkcs7pad(utf8Converter.toBytes(data));
 
-const bytesToStringWithPaddingAndUT8Decode = (data) => utf8Converter.fromBytes(pkcs7strip(data));
+export const bytesToStringWithPaddingAndUT8Decode = (data) => utf8Converter.fromBytes(pkcs7strip(data));
 
 
-const generateEncrypt = async (secretkey, message) => {
-    const start = Date.now()
-    // const secretKeyString = "nabielrahasiabanget";
-    const aesKeyLengthInBytes = 32;
-    const keyInBits = await deriveBitsFromPassword(secretkey, aesKeyLengthInBytes);
-    const iv = generateIv();
-    
-    // const plainTextToEncrypt = "1s";
-    
-    const plainTextBytes = stringToBytesWithPaddingAndUT8Encode(message);
 
-    
-    const aesCbc = new AES.CBC(new Uint8Array(keyInBits.derivedBits), iv);
-    
-    const encrypted = aesCbc.encrypt(plainTextBytes);
-    const encryptedString = AES.utils.utf8.fromBytes(encrypted);
-    
-    // console.log('aescbc:', aesCbc)
-    console.log(`decryption: ${message}, took ${Date.now() - start}ms, encrypted: ${encryptedString}`)
-}
-
-const data = ['kalimat 1','kalimat 2','kalimat 3']
-
-console.log("")
-data.forEach(e=>{
-    generateEncrypt("nursyah", e)
-})
 
 ///////////////////////
 // Exporting
 // The block cipher
-const AES = {
+export const AES = {
     AES: AesImplementation,
     CBC: AesCBCImplementation,
     utils: {
@@ -529,27 +503,64 @@ const AES = {
 
     let start = Date.now()
     // AES-CBC (Advanced Encryption Standard - Cipher Block Chaining) adalah salah satu mode operasi yang digunakan bersama dengan algoritma enkripsi blok AES. Mode operasi ini digunakan untuk mengenkripsi data yang lebih panjang daripada ukuran blok AES, yaitu 128 bit.
-    const aesCbc = new AES.CBC(new Uint8Array(keyInBits.derivedBits), iv);
-    // disini terjadi enkripsi
-    
-    // console.log('aescbc:', aesCbc)
-    // console.log(`encryption time: ${Date.now() - start}ms`)
-
-
-    
+    const aesCbc = new AES.CBC(new Uint8Array(keyInBits.derivedBits), iv);  
 
 
     const encrypted = aesCbc.encrypt(plainTextBytes);
     const encryptedString = AES.utils.utf8.fromBytes(encrypted);
-    // console.log("encryptedString: ", encryptedString);
 
-    start = Date.now()
+
+    
 
     const decryption = new AES.CBC(new Uint8Array(keyInBits.derivedBits), iv);
     const decrypted = decryption.decrypt(encrypted);
     const decryptedString = bytesToStringWithPaddingAndUT8Decode(decrypted);
-    // console.log("decryptedString: ", decryptedString);
-
-    // console.log(`decryption time: ${Date.now() - start}ms`)
+    
 })();
+
+// use
+// formatText('9', 'panjang pesan')
+const formatText = (data=0,label='') => {
+    // generate space for text input
+    let space = ""
+    const n = label.length - data.length.toString().length
+    for(let i=0; i<n;i++){
+        space+=" "
+    }
+    
+    return `${data.length}${space}`.slice(0, n)+'  |'
+}
+
+//  just read this
+const generateEncrypt = async (secretkey, message) => {    
+    let start = Date.now()
+    
+    const aesKeyLengthInBytes = 32;
+    const keyInBits = await deriveBitsFromPassword(secretkey, aesKeyLengthInBytes);
+    const iv = generateIv();
+    
+    const plainTextBytes = stringToBytesWithPaddingAndUT8Encode(message);
+    const aesCbc = new AES.CBC(new Uint8Array(keyInBits.derivedBits), iv);
+    
+
+    const encrypted = aesCbc.encrypt(plainTextBytes);
+    const res = {
+        panjangpesan: formatText(message, 'panjang pesan')
+    }
+    
+    console.log(`${res.panjangpesan}`)
+    
+}
+
+
+
+
+// console.log("panjang pesan | enkripsi (ms) | autentikasi (ms) | verifikasi (ms) | total enkripsi (ms) | total deskripsi (ms)")
+// console.log("panjang pesan | enkripsi (ms) | autentikasi (ms) | verifikasi (ms) | total enkripsi (ms) | total deskripsi (ms)")
+
+// generateEncrypt("nursyah", "hai")
+
+// data.forEach(e=>{
+//     generateEncrypt("nursyah", e)
+// })
 

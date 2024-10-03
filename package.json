@@ -1,0 +1,12 @@
+{
+  "name": "encrypt",
+  "version": "1.0.0",
+  "description": "> pastikan .env sudah sesuai > pastikan sudah melakukan npx prisma migrate pada backend",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch avalonceEffect.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
